@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bufio"
+	"aoc21/lib"
 	"fmt"
-	"io"
 	"os"
-	"strconv"
 )
 
 // https://adventofcode.com/2021/day/3
@@ -14,7 +12,9 @@ import (
 //   go run . < input
 
 func main() {
-	nums, bits := LinesToNumbers(os.Stdin)
+	lines := lib.ReadLines(os.Stdin)
+	bits := len(lines[0])
+	nums := lib.LinesToNumbers(lines, 2)
 	gamma, epsilon := CalcGammaEpsilon(nums, bits)
 
 	fmt.Printf("gamma: %d\n", gamma)
@@ -29,45 +29,43 @@ func main() {
 
 }
 
-func LinesToNumbers(rd io.Reader) ([]int, int) {
-	var nums []int
-	var bits int
-
-	scanner := bufio.NewScanner(rd)
-	for scanner.Scan() {
-		line := scanner.Text()
-		bits = len(line)
-		num, _ := strconv.ParseInt(line, 2, 64)
-		nums = append(nums, int(num))
-	}
-
-	return nums, bits
-}
-
 func ComputeO2AndCO2(nums []int, bits int) (int, int) {
-	return o2(nums, bits), co2(nums, bits)
+	return o2(nums, bits, true), o2(nums, bits, false)
 }
 
-func o2(nums []int, bits int) int {
+func o2(nums []int, bits int, useGamma bool) int {
 
 	nextNums := nums
 	for i := 0; i < bits; i++ {
 		nums = nextNums
 		nextNums = make([]int, 0)
 
+		// which bit are we looking at this time?
 		mask := 1 << (bits - i - 1)
-		gamma, _ := CalcGammaEpsilon(nums, bits)
+
+		// mask gamma (or epsilon) with this mask
+		var compareBit int
+		gamma, epsilon := CalcGammaEpsilon(nums, bits)
+		if useGamma {
+			compareBit = gamma & mask
+		} else {
+			compareBit = epsilon & mask
+		}
+
+		// get all the remaining numbers that have the right value for compareBit
 		for _, num := range nums {
-			if num&mask == gamma&mask {
+			if num&mask == compareBit {
 				nextNums = append(nextNums, num)
 			}
 		}
 
+		// are we down to one?
 		if len(nextNums) == 1 {
 			return nextNums[0]
 		}
 	}
 
+	fmt.Errorf("Whoops, did not converge")
 	return 0
 }
 
@@ -96,30 +94,25 @@ func co2(nums []int, bits int) int {
 
 func CalcGammaEpsilon(nums []int, bits int) (int, int) {
 	gamma := 0
-	epsilon := 0
 
 	zeros := make([]int, bits)
-	ones := make([]int, bits)
+	n := len(nums)
 
 	for _, num := range nums {
 		for i := 0; i < bits; i++ {
 			if (num & (1 << i)) == 0 {
 				zeros[bits-i-1]++
-			} else {
-				ones[bits-i-1]++
 			}
 		}
 	}
 
 	for i := 0; i < bits; i++ {
 		gamma <<= 1
-		epsilon <<= 1
-		if ones[i] >= zeros[i] {
+		if zeros[i] <= n/2 {
 			gamma |= 1
-		} else {
-			epsilon |= 1
 		}
 	}
 
+	epsilon := (1<<bits - 1) & ^gamma
 	return gamma, epsilon
 }

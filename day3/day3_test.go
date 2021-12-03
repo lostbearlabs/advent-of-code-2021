@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aoc21/lib"
 	"fmt"
 	"strings"
 	"testing"
@@ -28,7 +29,9 @@ func TestSimple(t *testing.T) {
 `
 
 	rd := strings.NewReader(input)
-	nums, bits := LinesToNumbers(rd)
+	lines := lib.ReadLines(rd)
+	bits := len(lines[0])
+	nums := lib.LinesToNumbers(lines, 2)
 	gamma1, epsilon1 := CalcGammaEpsilon(nums, bits)
 	assertEq(t, "gamma1", 22, gamma1)
 	assertEq(t, "epsilon1", 9, epsilon1)

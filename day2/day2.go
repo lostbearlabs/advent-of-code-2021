@@ -54,7 +54,7 @@ func Count(rd io.Reader) (int, int, int, int) {
 			depth1 += delta
 
 			aim2 += delta
-		} else if parts[0]=="up" {
+		} else if parts[0] == "up" {
 			depth1 -= delta
 
 			aim2 -= delta
@@ -62,7 +62,7 @@ func Count(rd io.Reader) (int, int, int, int) {
 			horz1 += delta
 
 			horz2 += delta
-			depth2 += aim2*delta
+			depth2 += aim2 * delta
 		} else {
 			fmt.Printf("bad line: %s\n", line)
 			os.Exit(1)

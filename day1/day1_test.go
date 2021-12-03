@@ -21,6 +21,6 @@ func TestSimple(t *testing.T) {
 
 	rd := strings.NewReader(input)
 	numIncrease, numWindowIncrease := Count(rd)
-	assertEq(t,"numIncrease", 3, numIncrease)
+	assertEq(t, "numIncrease", 3, numIncrease)
 	assertEq(t, "numWindowIncrease", 1, numWindowIncrease)
 }
