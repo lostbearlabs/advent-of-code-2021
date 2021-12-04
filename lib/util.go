@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
+	"testing"
 )
 
 func ReadLines(rd io.Reader) []string {
@@ -35,4 +37,34 @@ func LinesToNumbers(lines []string, base int) []int {
 func ReadNumbers(rd io.Reader, base int) []int {
 	lines := ReadLines(rd)
 	return LinesToNumbers(lines, base)
+}
+
+func AssertEq(t *testing.T, name string, expected int, actual int) {
+	if expected != actual {
+		t.Errorf("%s: expected %d, got %d", name, expected, actual)
+	}
+}
+
+func LinesToNumbersSep(lines []string, base int, sep string) []int {
+	var nums []int
+	for _, line := range lines {
+
+		var ar []string
+		if sep == " " {
+			// special case ... ignore repeated spaces
+			ar = strings.Fields(line)
+		} else {
+			ar = strings.Split(line, sep)
+		}
+
+		for _, field := range ar {
+			num, err := strconv.ParseInt(field, base, 32)
+			if err != nil {
+				fmt.Errorf("bad input: %s\n", line)
+			}
+			nums = append(nums, int(num))
+		}
+	}
+
+	return nums
 }
