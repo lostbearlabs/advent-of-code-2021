@@ -45,6 +45,26 @@ func AssertEq(t *testing.T, name string, expected int, actual int) {
 	}
 }
 
+func AssertEqAr(t *testing.T, name string, expected []int, actual []int) {
+	match := true
+	if len(expected) != len(actual) {
+		t.Errorf("%s: len(expected) %d, got %d", name, len(expected), len(actual))
+		match = false
+	} else {
+		for i, exp := range expected {
+			if exp != actual[i] {
+				t.Errorf("%s: expected[%d] %d, got %d", name, i, exp, actual[i])
+				match = false
+			}
+		}
+	}
+
+	if !match {
+		fmt.Println("expected: ", expected)
+		fmt.Println("actual: ", actual)
+	}
+}
+
 func LinesToNumbersSep(lines []string, base int, sep string) []int {
 	var nums []int
 	for _, line := range lines {
