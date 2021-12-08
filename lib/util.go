@@ -45,6 +45,12 @@ func AssertEq(t *testing.T, name string, expected int, actual int) {
 	}
 }
 
+func AssertEqStr(t *testing.T, name string, expected string, actual string) {
+	if expected != actual {
+		t.Errorf("%s: expected %s, got %s", name, expected, actual)
+	}
+}
+
 func AssertEqAr(t *testing.T, name string, expected []int, actual []int) {
 	match := true
 	if len(expected) != len(actual) {
@@ -54,6 +60,27 @@ func AssertEqAr(t *testing.T, name string, expected []int, actual []int) {
 		for i, exp := range expected {
 			if exp != actual[i] {
 				t.Errorf("%s: expected[%d] %d, got %d", name, i, exp, actual[i])
+				match = false
+			}
+		}
+	}
+
+	if !match {
+		fmt.Println("expected: ", expected)
+		fmt.Println("actual: ", actual)
+	}
+}
+
+func AssertEqMap(t *testing.T, expected map[string]int, actual map[string]int) {
+	match := true
+	if len(expected) != len(actual) {
+		t.Errorf("len(expected) %d, got %d", len(expected), len(actual))
+		match = false
+	} else {
+
+		for k, v := range expected {
+			if actual[k] != v {
+				t.Errorf("expected[%d] %d, got %d", k, v, actual[k])
 				match = false
 			}
 		}
