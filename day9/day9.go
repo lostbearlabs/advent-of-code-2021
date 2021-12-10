@@ -12,7 +12,7 @@ import (
 // Usage:
 //   go run . < input
 
-// https://adventofcode.com/2021/day/8
+// https://adventofcode.com/2021/day/9
 
 func main() {
 	ar := lib.ReadDigitsArray(os.Stdin)
