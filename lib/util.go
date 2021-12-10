@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"strconv"
 	"strings"
 	"testing"
@@ -114,4 +115,22 @@ func LinesToNumbersSep(lines []string, base int, sep string) []int {
 	}
 
 	return nums
+}
+
+func ReadDigitsArray(rd io.Reader) [][]int {
+	var ar [][]int
+	lines := ReadLines(rd)
+	for _, line := range lines {
+		var br []int
+		for _, c := range line {
+			x := int(c) - int('0')
+			if x < 0 || x > 9 {
+				log.Fatal("nope")
+			}
+			br = append(br, x)
+		}
+		ar = append(ar, br)
+	}
+
+	return ar
 }
