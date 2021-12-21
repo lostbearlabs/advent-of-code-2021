@@ -124,7 +124,7 @@ func GetCharCountsFromPairMap(mp map[string]int, origString string) []CharCount 
 }
 
 // ******************
-// Update
+// PlayTurn
 
 // UpdatePolymer
 // Brute-force solution which just creates a new string from the old one.
