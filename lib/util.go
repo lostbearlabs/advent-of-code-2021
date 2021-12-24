@@ -46,6 +46,18 @@ func AssertEq(t *testing.T, name string, expected int, actual int) {
 	}
 }
 
+func AssertTrue(t *testing.T, st string, b bool) {
+	if !b {
+		t.Errorf("%s: expected true", st)
+	}
+}
+
+func AssertFalse(t *testing.T, st string, b bool) {
+	if b {
+		t.Errorf("%s: expected false", st)
+	}
+}
+
 func AssertEqStr(t *testing.T, name string, expected string, actual string) {
 	if expected != actual {
 		t.Errorf("%s: expected %s, got %s", name, expected, actual)
